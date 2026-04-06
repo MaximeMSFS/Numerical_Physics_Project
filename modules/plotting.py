@@ -51,7 +51,6 @@ def field_plot(Cell_pos, V, Cell_field, instant, time, parameters):
     plt.tight_layout()
     return
 
-
 def energy_plot(energy, parameters):
     
     t = parameters["time"]["t"]
