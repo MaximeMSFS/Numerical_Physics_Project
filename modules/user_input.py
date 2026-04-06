@@ -29,10 +29,11 @@ def User_input():
     if (init == 'no') : 
         Invalid_entry = True
         while Invalid_entry :
-            scheme = int(input(Fore.CYAN + Style.BRIGHT + "Which scheme do you wish to use ?\n (0 = Explicite Euler, 1 = Implicit Euler, 2 = Leapfrog, 3 = RK4) :\n").strip())
-            parameters['numerical']['scheme'] = scheme
-            if (scheme == 0) or (scheme == 1) or (scheme == 2) or (scheme == 3) :
+            scheme = input(Fore.CYAN + Style.BRIGHT + "Which scheme do you wish to use ?\n (0 = Explicite Euler, 1 = Implicit Euler, 2 = Leapfrog, 3 = RK4) :\n").strip()
+            if (scheme == '0') or (scheme == '1') or (scheme == '2') or (scheme == '3') :
                 Invalid_entry = False
+                scheme = int(scheme)
+                parameters['numerical']['scheme'] = scheme
             else :
                 print (Fore.RED + Style.BRIGHT + 'Invalid entry')
         
