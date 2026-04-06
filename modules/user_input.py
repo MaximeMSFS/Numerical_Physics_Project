@@ -57,7 +57,7 @@ def User_input():
             if (save == "yes") :
                 output_dir = input(Fore.CYAN + Style.BRIGHT + "Please enter the output directory name :\n").strip()
                 data_dir = Path("data")/output_dir
-                data_dir.mkdir(exist_ok=True)
+                data_dir.mkdir(parents=True, exist_ok=True)
                 main_file = open(data_dir/f"{output_dir}_main.dat", 'w')
                 pos_file = open(data_dir /f"{output_dir}_position.dat", "ab")
                 vel_file = open(data_dir /f"{output_dir}_velocity.dat", "ab")
