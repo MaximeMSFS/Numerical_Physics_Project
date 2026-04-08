@@ -51,12 +51,10 @@ def field_plot(Cell_pos, V, Cell_field, instant, time, parameters):
     plt.tight_layout()
     return
 
-def energy_plot(energy, parameters):
-    
-    t = parameters["time"]["t"]
+def energy_plot(energy, time, parameters):
     
     plt.figure()
-    plt.plot(t, energy)
+    plt.plot(time, energy)
     plt.xlabel("Time")
     plt.ylabel("Total Energy")
     plt.title("Energy deviation", fontweight='bold')

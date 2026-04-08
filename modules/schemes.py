@@ -72,7 +72,7 @@ def Compute_force(pos, Cell_pot, parameters):
     return Part_force, Part_per_cell, Cell_pot, Cell_field
 
 
-def Euler_exp(pos, vel, dt, force, parameters):
+def Euler_exp(pos, vel, dt, force, Cell_pot, parameters):
     p = parameters["particles"]
 
     m = p["m"]
@@ -83,10 +83,10 @@ def Euler_exp(pos, vel, dt, force, parameters):
     pos_new = pos + dpos_dt * dt
     vel_new = dpos_dt + dvel_dt * dt
 
-    return pos_new, vel_new
+    return pos_new, vel_new, Cell_pot
 
 
-def Euler_imp(pos, vel, dt, force, parameters):
+def Euler_imp(pos, vel, dt, force, Cell_pot, parameters):
     
     p = parameters["particles"]
 
@@ -98,7 +98,7 @@ def Euler_imp(pos, vel, dt, force, parameters):
     vel_new = dpos_dt + dvel_dt * dt
     pos_new = pos + vel_new * dt
 
-    return pos_new, vel_new
+    return pos_new, vel_new, Cell_pot
 
 
 def Leapfrog(pos, vel, dt, force, Cell_pot, parameters):
@@ -120,7 +120,7 @@ def Leapfrog(pos, vel, dt, force, Cell_pot, parameters):
 
     vel_new = vel + 0.5 * (dvel_dt + dvel_dt_new) * dt
 
-    return pos_new, vel_new, Cell_pot, Cell_field
+    return pos_new, vel_new, Cell_pot
 
 
 def RK4(pos, vel, dt, force, Cell_pot, parameters):
@@ -147,11 +147,11 @@ def RK4(pos, vel, dt, force, Cell_pot, parameters):
 
     pos_temp = (pos + dt * k3_pos) % L
     vel_temp = vel + dt * k3_vel
-    force, Part_per_cell, Cell_pot, Cell_field  = Compute_force(pos_temp)
+    force, Part_per_cell, Cell_pot, Cell_field  = Compute_force(pos_temp, Cell_pot, parameters)
     k4_pos = vel_temp
     k4_vel = force / m
 
     pos_new = pos + dt * (k1_pos + 2*k2_pos + 2*k3_pos + k4_pos)/6
     vel_new = vel + dt * (k1_vel + 2*k2_vel + 2*k3_vel + k4_vel)/6
 
-    return pos_new, vel_new, Cell_pot, Cell_field
+    return pos_new, vel_new, Cell_pot

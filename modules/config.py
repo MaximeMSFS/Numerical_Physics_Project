@@ -42,6 +42,7 @@ k2[0] = 1.0   # avoids division by zero
 
 # numerical #
 Relax_step_max = 50
+variable_dt = 'no'
 epsilon = 1e-4
 eps = dx/2           # dumb schmilblick to be removed later on
 save_step = 100
@@ -70,14 +71,15 @@ def config():
     
     config["time"] = dict(Tmin = Tmin,             
                           Tmax = Tmax,                
-                          dt0 = dt0,                    
+                          dt0 = dt0,
                           t = t,
                           step = step)
     
     config["fft"] = dict(k = k, 
                          k2 = k2)
 
-    config["numerical"] = dict(Relax_step_max = Relax_step_max, 
+    config["numerical"] = dict(Relax_step_max = Relax_step_max,
+                               variable_dt = variable_dt,
                                epsilon = epsilon, 
                                eps = eps, 
                                save_step = save_step,

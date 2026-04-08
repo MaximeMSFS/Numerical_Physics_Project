@@ -29,7 +29,7 @@ def User_input():
     if (init == 'no') : 
         Invalid_entry = True
         while Invalid_entry :
-            scheme = input(Fore.CYAN + Style.BRIGHT + "Which scheme do you wish to use ?\n (0 = Explicite Euler, 1 = Implicit Euler, 2 = Leapfrog, 3 = RK4) :\n").strip()
+            scheme = input(Fore.CYAN + Style.BRIGHT + "\nWhich scheme do you wish to use ?\n (0 = Explicite Euler, 1 = Implicit Euler, 2 = Leapfrog, 3 = RK4) :\n").strip()
             if (scheme == '0') or (scheme == '1') or (scheme == '2') or (scheme == '3') :
                 Invalid_entry = False
                 scheme = int(scheme)
@@ -39,20 +39,33 @@ def User_input():
         
         Invalid_entry = True
         while Invalid_entry :
-            solver = input(Fore.CYAN + Style.BRIGHT + "Which solver do you wish to use ?\n (F = Fourrier, P = Poisson) :\n").strip().lower()
-            parameters['numerical']['solver'] = solver
+            solver = input(Fore.CYAN + Style.BRIGHT + "\nWhich solver do you wish to use ?\n (F = Fourrier, P = Poisson) :\n").strip().lower()
             if (solver == 'f') or (solver == "p") :
                 Invalid_entry = False
+                parameters['numerical']['solver'] = solver
             else :
                 print (Fore.RED + 'Invalid entry')
+                
+        Invalid_entry = True
+        while Invalid_entry :
+            variable_dt = input(Fore.CYAN + Style.BRIGHT + "\nDo you wish to use a variable time step ?\n (Yes, No) :\n").strip().lower()
+            if (variable_dt == 'yes') or (variable_dt == 'no') :
+                Invalid_entry = False
+                parameters['numerical']['variable_dt'] = variable_dt
+            else :
+                print (Fore.RED + 'Invalid entry')
+                
     else :
         scheme = parameters['numerical']['scheme']
         solver = parameters['numerical']['solver']
+        variable_dt = parameters['numerical']['variable_dt']
+    
+    
             
     
     Invalid_entry = True
     while Invalid_entry :
-        save = input(Fore.CYAN + Style.BRIGHT + "Do you wish to save the results ?\n (Yes, No) :\n").strip().lower()
+        save = input(Fore.CYAN + Style.BRIGHT + "\nDo you wish to save the results ?\n (Yes, No) :\n").strip().lower()
         if (save == 'yes') or (save == "no") :
             Invalid_entry = False
             if (save == "yes") :
@@ -75,18 +88,21 @@ def User_input():
     elif  (scheme == 1) :
         print (Fore.WHITE + Style.BRIGHT + '\nUsing Implicit Euler Scheme ', end="")
     elif  (scheme == 2) :
-        print (Fore.WHITE + Style.BRIGHT + '\nUsing Explicite Leapfrog Scheme ', end="")
+        print (Fore.WHITE + Style.BRIGHT + '\nUsing Leapfrog Scheme ', end="")
     else :
-        print (Fore.WHITE + Style.BRIGHT + '\nUsing Explicite Range-Kutta 4 Scheme ', end="")
+        print (Fore.WHITE + Style.BRIGHT + '\nUsing Range-Kutta 4 Scheme ', end="")
     
         
     if (solver == 'f') :
-        print (Fore.WHITE + Style.BRIGHT + 'with the Fourrier Solver')
+        print (Fore.WHITE + Style.BRIGHT + 'with the Fourrier Solver ', end="")
     else :
-        print (Fore.WHITE + Style.BRIGHT + 'with the Poisson Solver')
+        print (Fore.WHITE + Style.BRIGHT + 'with the Poisson Solver ', end='')
+        
+    if (variable_dt == 'yes') :
+        print (Fore.WHITE + Style.BRIGHT + 'and variable time step', end='')
     
     if (save == "yes") :
-        print (Fore.WHITE + Style.BRIGHT + f'Saving results to {data_dir}')
+        print (Fore.WHITE + Style.BRIGHT + f'\nSaving results to {data_dir}')
     print ('\n')
     
     return parameters, main_file, pos_file, vel_file, pot_file, resume_file, save

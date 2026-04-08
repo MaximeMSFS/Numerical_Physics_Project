@@ -5,24 +5,19 @@ previous calculation
 import numpy as np
 
 def start(parameters):
-    
 
     p, d, n = parameters["particles"], parameters["domain"], parameters["numerical"]
 
-    # particles #
     Part_num, Pop_A_num, Pop_B_num = p["Part_num"], p["Pop_A_num"], p["Pop_B_num"]
     q = p["q"]
     pos_disp, Vel_disp = p["pos_disp"], p["Vel_disp"]
 
-    # domain #
     L, Cell_num = d["L"], d["Cell_num"]
     Cell_edges = d["Cell_edges"]
 
-    # numerical #
     random_seed = n["random_seed"]
 
-    
-################################# Initialisation ##############################
+
     np.random.seed(random_seed)    #for debug, allows for reproductibility
 
     Part_pos = np.zeros(Part_num)
