@@ -3,10 +3,14 @@ plotting functions
 """
 import matplotlib.pyplot as plt
 
-def conditions_plot(Cell_pos, Part_per_cell, Part_pos, Part_vel, instant, time, parameters):
+def conditions_plot(Cell_pos, Part_per_cell, Part_pos, Part_vel, instant, time, parameters):   
+    
+    # ========================================================================
     
     Pop_A_num = parameters["particles"]["Pop_A_num"]
     Pop_B_num = parameters["particles"]["Pop_B_num"]
+    
+    # ========================================================================   
     
     plt.figure()
     plt.suptitle(f"{instant} Conditions\n t = {time} s", fontweight="extra bold")
@@ -29,9 +33,14 @@ def conditions_plot(Cell_pos, Part_per_cell, Part_pos, Part_vel, instant, time, 
 
     plt.tight_layout()
     plt.show()
+       
     return
 
-def field_plot(Cell_pos, V, Cell_field, instant, time, parameters):
+
+
+
+def field_plot(Cell_pos, V, Cell_field, instant, time, parameters):  
+    
     plt.figure()
     plt.suptitle(f"{instant} Electrical Potential and Field\n t = {time} s", fontweight="extra bold")
     plt.subplot(1,2,1)
@@ -49,9 +58,13 @@ def field_plot(Cell_pos, V, Cell_field, instant, time, parameters):
     plt.grid()
 
     plt.tight_layout()
+      
     return
 
-def energy_plot(energy, time, parameters):
+
+
+
+def energy_plot(energy, time, parameters):    
     
     plt.figure()
     plt.plot(time, energy)
@@ -59,5 +72,29 @@ def energy_plot(energy, time, parameters):
     plt.ylabel("Total Energy")
     plt.title("Energy deviation", fontweight='bold')
     plt.grid()
+        
+    return
+
+
+
+
+def position_plot(pos, parameters):
     
+    # ========================================================================
+
+    Pop_A_num = parameters["particles"]["Pop_A_num"]
+    
+    # ========================================================================
+       
+    plt.figure()
+    plt.scatter(pos[0:Pop_A_num,0], pos[0:Pop_A_num,1], color='blue')
+    plt.scatter(pos[Pop_A_num:,0], pos[Pop_A_num:,1], color='red')
+    plt.xlabel("x coordinate (m)")
+    plt.ylabel("x coordinate (m)")
+    plt.axis('equal')
+    plt.xlim(0,1)
+    plt.ylim(0,1)
+    plt.title("Particles Position", fontweight='bold')
+    plt.grid()
+      
     return

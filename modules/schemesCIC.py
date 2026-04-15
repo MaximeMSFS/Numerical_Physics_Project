@@ -7,7 +7,7 @@ import numpy as np
 
 
 def Compute_force(pos, Cell_pot, parameters):
-    
+
     p, d, f, n = parameters["particles"], parameters["domain"], parameters["fft"], parameters["numerical"]
 
     Part_num = p["Part_num"]
@@ -22,54 +22,79 @@ def Compute_force(pos, Cell_pot, parameters):
     Relax_step_max, epsilon = n["Relax_step_max"], n["epsilon"]
     solver = n["solver"]
 
-    V = Cell_pot
+    V = Cell_pot                    
 
-    Part_per_cell, b = np.histogram(pos, bins=Cell_edges)
-    
     rho0 = Part_num / Cell_num                                                 ######## Needs to be cleaned ########
 
-    #rho = rho0 - Part_per_cell                           # charge density
-    rho = q*(Part_per_cell - rho0)/dx
+    index = np.floor(pos/dx).astype(int)
+    pos_in_cell_x = pos[:,0]/dx - index[:,0]
+    pos_in_cell_y = pos[:,1]/dx - index[:,1]
     
+    weight_left = 1-pos_in_cell_x
+    weight_right = pos_in_cell_x
+    weight_down = 1-pos_in_cell_y
+    weight_up = pos_in_cell_y
+    
+    weight_bl = weight_down * weight_left
+    weight_br = weight_down * weight_right
+    weight_tl = weight_up * weight_left
+    weight_tr = weight_up * weight_right
+
+    rho = np.zeros((Cell_num, Cell_num))
+
+    np.add.at(rho, (index[:,0] % Cell_num,index[:,1] % Cell_num), q*(weight_bl)/(dx**2))
+    np.add.at(rho, ((index[:,0]+1) % Cell_num,index[:,1] % Cell_num), q*(weight_br)/(dx**2))
+    np.add.at(rho, (index[:,0] % Cell_num,(index[:,1]+1) % Cell_num), q*(weight_tl)/(dx**2))
+    np.add.at(rho, ((index[:,0]+1) % Cell_num,(index[:,1]+1) % Cell_num), q*(weight_tr)/(dx**2))
+
+    #rho = rho0 - Part_per_cell                           # charge density
+    rho -= q * rho0 / dx
+
 
     # Relaxation scheme #
     if solver == 'p':
-        
-        for j in range(Relax_step_max):                                        
-            Vnew = 0.5 * (np.roll(V,-1) + np.roll(V,1) + dx**2 * (rho / eps0)) # Poisson equation 
-        
+
+        for z in range(Relax_step_max):
+            Vnew = 0.5 * (np.roll(V,-1) + np.roll(V,1) + dx**2 * (rho / eps0)) # Poisson equation  
+
             delta = np.max(np.abs((Vnew-V)/(V+1e-10)))                         # Convergency check
-        
+
             V = Vnew.copy()
-     
-            if delta < epsilon :                                               # Optimisation
+
+            if delta < epsilon:                                                # Optimisation
                 break
 
         Cell_field = -(np.roll(V,-1) - np.roll(V,1)) / (2*dx)                  # Field in each cell
         Cell_pot = V
 
-    
+
     # Fourier solver #
     else:
 
-        rho_k = np.fft.fft(rho)
+        rho_k = np.fft.fft2(rho)
 
         V_k = rho_k / (k2 * eps0)
-        V_k[0] = 0.0
+        V_k[0,0] = 0.0
 
         V = np.real(np.fft.ifft(V_k))
 
         E_k = -1j*k*V_k
         Cell_field = np.real(np.fft.ifft(E_k))  # Field in each cell
-        
+
         Cell_pot = V
 
 
-    Part_field = np.interp(pos, Cell_pos, Cell_field)             # Field felt by each particle (simple interpolation)
+    Part_field = weight_bl*Cell_field[index[:,0] % Cell_num,index[:,1] % Cell_num]
+    + weight_br*Cell_field[(index[:,0]+1) % Cell_num,index[:,1] % Cell_num]
+    + weight_tl*Cell_field[index[:,0] % Cell_num,(index[:,1]+1) % Cell_num]
+    + weight_tl*Cell_field[(index[:,0]+1) % Cell_num,(index[:,1]+1) % Cell_num]      # Field felt by each particle (weighted interpolation)
+    
+    Part_force = np.zeros((Part_num, 2))
+    Part_force[:,0] = q * Part_field   # Force on each particle
+    Part_force[:,1] = q * Part_field   # Force on each particle
+    
 
-    Part_force = q * Part_field                                   # Force on each particle
-
-    return Part_force, Part_per_cell, Cell_pot, Cell_field
+    return Part_force, rho, Cell_pot, Cell_field
 
 
 
