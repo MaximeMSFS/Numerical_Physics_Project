@@ -5,6 +5,10 @@ import numpy as np
 from pathlib import Path
 
 def header(file, parameters):
+    
+    
+    # ========================================================================
+    
     p, d, t, n = parameters["particles"], parameters["domain"], parameters["time"], parameters["numerical"]
 
     # particles #
@@ -23,6 +27,8 @@ def header(file, parameters):
     Relax_step_max, epsilon, eps = n["Relax_step_max"], n["epsilon"], n["eps"]
     save_step, random_seed = n["save_step"], n["random_seed"]
     scheme, solver = n["scheme"], n["solver"]
+    
+    # ========================================================================
     
     
     file.write("==============================================================\n")
@@ -59,14 +65,21 @@ def header(file, parameters):
     file.write(f"epsilon              : {epsilon}\n")
     file.write(f"eps                  : {eps:.4f}\n")
     file.write(f"save every X step    : {save_step}\n")
+    file.write(f"variable time step   : {save_step}\n")
     file.write(f"random seed          : {random_seed}\n\n")
     
     file.write("==============================================================\n\n")
     
     file.write(f"{'step':>6} {'time':>10} {'energy':>10}\n")
+    
+    
     return
 
+
+
+
 def read_config(input_dir):
+    
     
     data_dir = Path("data")/input_dir
     
@@ -172,4 +185,6 @@ def read_config(input_dir):
     vel = data["vel"]
     pot = data["pot"]
 #==============================================================================
+
+
     return config, step, resume_time, pos, vel, pot

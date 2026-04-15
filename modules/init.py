@@ -20,14 +20,22 @@ def start(parameters):
 
     np.random.seed(random_seed)    #for debug, allows for reproductibility
 
-    Part_pos = np.zeros(Part_num)
-    Part_vel = np.zeros(Part_num)
+    Part_pos = np.zeros((Part_num,2))
+    Part_vel = np.zeros((Part_num,2))
 
-    Part_pos[0:Pop_A_num] = L*np.random.rand(Pop_A_num)
-    Part_pos[Pop_A_num:] = L*np.random.rand(Pop_B_num)
+    Part_pos[0:Pop_A_num,0] = L*np.random.rand(Pop_A_num)
+    Part_pos[Pop_A_num:,0] = L*np.random.rand(Pop_B_num)
+    
+    Part_pos[0:Pop_A_num,1] = L*np.random.rand(Pop_A_num)
+    Part_pos[Pop_A_num:,1] = L*np.random.rand(Pop_B_num)
 
-    Part_vel[0:Pop_A_num] = 1.0 - Vel_disp/2 + Vel_disp * np.random.rand(Pop_A_num)
-    Part_vel[Pop_A_num:] = -1.0 - Vel_disp/2 + Vel_disp * np.random.rand(Pop_B_num)
+    Part_vel[0:Pop_A_num,0] = 1.0 - Vel_disp/2 + Vel_disp * np.random.rand(Pop_A_num)
+    Part_vel[Pop_A_num:,0] = -1.0 - Vel_disp/2 + Vel_disp * np.random.rand(Pop_B_num)
+    
+    Part_vel[0:Pop_A_num,1] = 1.0 - Vel_disp/2 + Vel_disp * np.random.rand(Pop_A_num)
+    Part_vel[Pop_A_num:,1] = -1.0 - Vel_disp/2 + Vel_disp * np.random.rand(Pop_B_num)
+    
+    Part_vel[:,0] += 1e-3 * np.random.randn(*Part_vel[:,0].shape)
 
     Part_charge = np.ones(Part_num) * q
 

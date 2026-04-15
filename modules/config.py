@@ -6,7 +6,7 @@ import numpy as np
 
 
 # particles #
-Part_num = int(1e4) # Number of particles
+Part_num = int(1e2) # Number of particles
 q = -1              # Charge of particles (C)
 m = 1               # Mass of particles (kg)
 
@@ -23,7 +23,10 @@ Cell_num = 300     # Number of cells in the domain
 dx = L / Cell_num  # Size of a cell (m)
 
 Cell_pos = np.linspace(0, L-dx, Cell_num) + dx/2 # position of each cell (center of the cell)
+Cell_pos_x, Cell_pos_y = np.meshgrid(Cell_pos, Cell_pos)
+
 Cell_edges = np.linspace(0, L, Cell_num+1)       # position of each cell borders (used for bins)
+Cell_edges_x, Cell_edges_y = np.meshgrid(Cell_edges, Cell_edges)
 
 eps0 = 1.0 # Medium permitivity
 
